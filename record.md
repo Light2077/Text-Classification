@@ -24,9 +24,15 @@
 README.md
 ```
 
-目前很完美，然后把这个文件`record.md`拷贝进`Text-Classification`文件夹。用git push一下。
+目前很完美，然后把这个文件`record.md`拷贝进`Text-Classification`文件夹。用git add, commit, push三连看看成功没。
 
+擦，原来那么简单，为啥我以前就觉得那么麻烦呢？？？
 
+**pycharm关联**
 
+对着`Text-Classification`文件夹右键点击`open folder as pycharm project`。
 
+`File->setting->Verison Control->Github`点击`Add account`添加github账号
+
+然后`ctrl + k`commit一个文件试试。
 
