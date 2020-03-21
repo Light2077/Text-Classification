@@ -127,3 +127,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# My settings
+.idea
+/data/*
+!/data/百度题库.zip

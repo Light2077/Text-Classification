@@ -6,7 +6,7 @@
 
 - [廖雪峰Git教程](https://www.liaoxuefeng.com/wiki/896043488029600)
 
-**建库第一步**
+### **1. 建库第一步**
 
 打开gayhub，新建一个库，名字`Text-Classification`。勾上初始化README，添加python的`.gitignore`。
 
@@ -28,11 +28,25 @@ README.md
 
 擦，原来那么简单，为啥我以前就觉得那么麻烦呢？？？
 
-**pycharm关联**
+### **2. pycharm关联github**
 
 对着`Text-Classification`文件夹右键点击`open folder as pycharm project`。
 
 `File->setting->Verison Control->Github`点击`Add account`添加github账号
 
-然后`ctrl + k`commit一个文件试试。
+然后`ctrl + k`commit一个文件试试。再然后`ctrl + shift + k`push到github
 
+刷新github页面，看到了更新的内容，好了恭喜我。
+
+### 3. 思考这个项目是做什么的
+
+兄弟，文件夹之所以乱，就是因为不知道这个项目是来做什么的。首先我这个项目是文本分类项目。
+
+开局一个`百度题库.zip`压缩包，~~代码全靠copy~~。
+
+- 那得有一个文件件放数据吧。`data`
+- 得有一个文件夹放一些辅助脚本，比如数据预处理。`utils`
+- 得有三个文件夹放模型，因为我准备实现3个模型。`textcnn`, `transformer`, `bert`
+- 得有一个文件夹放notebook，notebook这个东西是真的有毒。太好用了，以致于可能反过来会被这个工具拖住更进一步的脚步。`notebook`
+
+好了暂时就这么多。
