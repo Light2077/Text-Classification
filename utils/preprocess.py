@@ -165,8 +165,8 @@ def load_testcnn_data():
     所以采取读取之后划分数据集的方式
     """
     # 与之前的bert同步
-    x = np.load(X_NPY)
-    y = np.load(Y_NPY)
+    x = np.load(X_NPY).astype(np.float32)
+    y = np.load(Y_NPY).astype(np.float32)
 
     # 与之前bert的划分方式统一
     train_x, test_x, train_y, test_y = train_test_split(x, y, test_size=0.2, random_state=2020)

@@ -50,5 +50,6 @@ TextCNN模型我是基于一个keras的实现，参考着【[模型类方式编�
 
 
 
+# Transformer
 
-
+对于使用tensorflow的用户来说，学transformer真的是非常方便，[官网教程](https://tensorflow.google.cn/tutorials/text/transformer)上直接有2.0的教程。
