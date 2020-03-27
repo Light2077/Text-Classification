@@ -1,11 +1,12 @@
 import tensorflow as tf
 
-"""
-可以考虑的优化的点：
-- filters 改成可以调的，跟kernel_sizes一样可以变化
-- 
-"""
+
 class TextCNN(tf.keras.Model):
+    """
+    可以考虑的优化的点：
+    - filters 改成可以调的，跟kernel_sizes一样可以变化
+    -
+    """
     def __init__(self, max_len, vocab_size, embedding_dim, output_dim, 
                  kernel_sizes, filters=2, embedding_matrix=None):
         super(TextCNN, self).__init__()

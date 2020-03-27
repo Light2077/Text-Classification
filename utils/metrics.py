@@ -7,12 +7,18 @@ from sklearn.metrics import confusion_matrix, accuracy_score, classification_rep
 import tensorflow as tf
 import numpy as np
 
+
 def accuracy(y_true, y_pred):
     return tf.reduce_mean(tf.cast(tf.equal(y_true, y_pred), tf.float32))
 
 
 def precision_recall(y_true, y_pred):
-
+    """
+    calculate micro precision and recall
+    :param y_true: tf.Tensor or np.ndarry shape == (n_samples, n_classes)
+    :param y_pred: tf.Tensor or np.ndarry shape == (n_samples, n_classes)
+    :return: tf.Tensor, tf.Tensor
+    """
     y_pred = tf.round(tf.keras.backend.clip(y_pred, 0, 1))  # 如果是概率形式的预测标签
     true_positives = tf.reduce_sum(y_true*y_pred)  # 统计所有标签的tp
     predict_positives = tf.reduce_sum(y_pred)  # 统计所有标签的预测是pos的个数
@@ -117,9 +123,11 @@ def plot_confusion_matrix(y_true, y_pred, classes,
 
 def evaluation(y_true, y_pred, metrics):
     """
-    多标签分类的评估
-    metrics : ['accuracy', 'micro_precision', 'macro_precision', 
-                'micro_recall', 'macro_recall', 'micro_f1', 'macro_f1']
+    multi label classification's evaluation ,u can chocice 6 metric
+    :param y_true : tf.Tensor or np.ndarry shape == (n_samples, n_classes)
+    :param y_true : tf.Tensor or np.ndarry shape == (n_samples, n_classes)
+    :param metrics : list ['accuracy', 'micro_precision', 'macro_precision',
+                          'micro_recall', 'macro_recall', 'micro_f1', 'macro_f1']
     """
 
     y_pred = tf.round(tf.keras.backend.clip(y_pred, 0, 1))
