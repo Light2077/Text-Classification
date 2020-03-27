@@ -2,7 +2,7 @@
 
 这个项目的任务是**试题知识点标注**。
 
-我使用了3个深度学习模型做这个项目，分别是TextCNN， Transformer, Bert。这个项目属于学习型项目，主要是通过代码实践的方式，加深对理论的理解。具体项目介绍如下：
+我使用了3个深度学习模型做这个项目，分别是TextCNN， Transformer, Bert。这个项目属于学习型项目，主要是通过代码实践的方式，加深对理论的理解。模型的性能拉到最下面，下面具体介绍项目：
 
 ![](notebook/images/原始数据概况.jpg)
 
@@ -16,9 +16,9 @@
 
 ![](notebook/images/项目流程图.png)
 
-首先开局一个压缩包，~~代码全靠copy~~
+首先开局一个[压缩包](data/百度题库.zip)，~~代码全靠copy~~
 
-先进行数据预处理，代码在[preprocess.py](utils/preprocess.py)。数据预处理的详解可以看[数据预处理.ipynb](notebook/数据预处理/数据预处理.ipynb)。里边有非常详细的步骤。这里就不多提了。
+先进行数据预处理，代码在[preprocess.py](utils/preprocess.py)。数据预处理的代码详解可以看[数据预处理.ipynb](notebook/数据预处理/数据预处理.ipynb)。里边有非常详细的步骤。
 
 经过数据预处理后得到了这三个模型能用的数据。对于**bert**是整理出：
 
@@ -52,7 +52,7 @@ TextCNN模型我是基于一个keras的实现，参考着【[模型类方式编�
 
 可以自定义kernel_size 大小各不相同的1维卷积层。主要对标上面这幅图，我实现的模型跟上面这张图类似。但是不是2分类模型而是多标签分类。
 
-详细的TextCNN代码请看[TextCNN运用.ipynb](notebook\TextCNN\TextCNN运用.ipynb)。TextCNN的训练过程如下：
+模型代码：[model.py](textcnn/model.py)详细的TextCNN代码解释请看[TextCNN运用.ipynb](notebook\TextCNN\TextCNN运用.ipynb)。TextCNN的训练过程如下：
 
 ![](notebook/images/textcnn-res.png)
 
@@ -70,7 +70,7 @@ TextCNN模型我是基于一个keras的实现，参考着【[模型类方式编�
 
 <img src="notebook/images/transformer-classification.png" style="zoom:38%;" />
 
-Transformer的训练过程如下，详细代码[Transformer运用.ipynb](notebook\Transformer\Transformer运用.ipynb)：
+Transformer的训练过程如下，源码：[model.py](transformer/model.py)。详细代码解释[Transformer运用.ipynb](notebook\Transformer\Transformer运用.ipynb)：
 
 ![](notebook/images/transformer-res.png)
 
@@ -80,15 +80,15 @@ Transformer的性能就明显优于TextCNN了，只需要迭代不到十轮效�
 
 # BERT
 
-在[notebook/BERT/bert源码探索.ipynb](notebook/BERT/bert源码探索.ipynb)里我详细探讨了bert关键的`run_classifier.py`文件，主要是怎么修改数据处理的接口，使得我们的任务能用得上bert，以及评估指标，损失函数的修改。但我说实话这真是太麻烦了，而且只能使用tensorflow1的静态图版本。
+在[bert源码探索](notebook/BERT/bert源码探索.ipynb)里我详细探讨了如何修改bert关键的`run_classifier.py`文件，主要是怎么修改数据处理的接口，使得我们的任务能用得上bert，以及评估指标，损失函数的修改。但我说实话这真是太麻烦了，而且只能使用tensorflow1的静态图版本。
 
-所以建议可以使用百度PaddlePaddle的PaddleHub，上面集成了很多预训练模型，加载模型只用2两行代码。开始预训练任务（除了数据预处理）总共不超过20行代码。
+所以建议使用百度PaddlePaddle的PaddleHub，上面集成了很多预训练模型，加载模型只用2两行代码。开始预训练任务（除了数据预处理）总共不超过20行代码。
 
 - [PaddleHub官网](https://www.paddlepaddle.org.cn/hub)
 
 - [PaddleHub Github]()
 
-我在用PaddleHub完成这个项目的时候，参考的主要例子是这个[PaddleHub 多标签分类](https://github.com/PaddlePaddle/PaddleHub/tree/release/v1.6/demo/multi_label_classification) 。可以在百度AI Studio使用，我把我这个项目的工程也放到了`notebook/BERT`里了。
+我在用PaddleHub完成这个项目的时候，参考的主要例子是这个[PaddleHub 多标签分类](https://github.com/PaddlePaddle/PaddleHub/tree/release/v1.6/demo/multi_label_classification) 。可以在百度AI Studio使用，我把我这个项目的工程也放到了“[paddlehub实现bert](notebook/BERT/paddlehub实现bert.ipynb)”里了。
 
 用paddle实现多分类的流程大致如下：
 
@@ -96,7 +96,7 @@ Transformer的性能就明显优于TextCNN了，只需要迭代不到十轮效�
 
 ![](notebook/images/paddlehub-多分类.png)
 
-类似Tensorflow的bert，你也需要写一个数据预处理的类来产生`dataset`。具体请看[notebook\BERT\paddlehub实现bert.ipynb](notebook\BERT\paddlehub实现bert.ipynb)
+类似Tensorflow的bert，你也需要写一个数据预处理的类来产生`dataset`。具体请看[paddlehub实现bert](notebook/BERT/paddlehub实现bert.ipynb)
 
 bert这里我还没研究怎么画出训练过程的图，paddlehub教程说是可以用tensorboard，但是我本机性能不高，主要是在ai studio上跑的项目，所以没能可视化bert的训练过程。
 
