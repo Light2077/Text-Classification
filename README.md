@@ -18,7 +18,7 @@
 
 首先开局一个压缩包，~~代码全靠copy~~
 
-先进行数据预处理，代码在`utils/preprocess.py`。数据预处理的详解可以看`notebook/数据预处理`。里边有非常详细的步骤。这里就不多提了。
+先进行数据预处理，代码在[preprocess.py](utils/preprocess.py)。数据预处理的详解可以看[数据预处理.ipynb](notebook/数据预处理/数据预处理.ipynb)。里边有非常详细的步骤。这里就不多提了。
 
 经过数据预处理后得到了这三个模型能用的数据。对于**bert**是整理出：
 
@@ -45,14 +45,14 @@
 
 ![](notebook/images/感性认识输入.png)
 
-TextCNN模型我是基于一个keras的实现，参考着【[模型类方式编写线性回归](https://tf.wiki/zh/basic/models.html)】这个案例来写的。所以我的TextCNN模型比较类似于[谷歌Transformer](https://tensorflow.google.cn/tutorials/text/transformer?hl=en)的编写方式。
+TextCNN模型我是基于一个keras的实现，参考着【[模型类方式编写线性回归](https://tf.wiki/zh/basic/models.html)】这个案例来写的。所以我的TextCNN模型比较类似于[谷歌Transformer](https://tensorflow.google.cn/tutorials/text/transformer?hl=en)的编写方式。编写代码在: [TextCNN学习.ipynb](notebook\TextCNN\TextCNN学习.ipynb)
 ![](notebook/images/conv1D.png)
 
 
 
 可以自定义kernel_size 大小各不相同的1维卷积层。主要对标上面这幅图，我实现的模型跟上面这张图类似。但是不是2分类模型而是多标签分类。
 
-详细的TextCNN代码请看`notebook/textcnn`。TextCNN的训练过程如下：
+详细的TextCNN代码请看[TextCNN运用.ipynb](notebook\TextCNN\TextCNN运用.ipynb)。TextCNN的训练过程如下：
 
 ![](notebook/images/textcnn-res.png)
 
@@ -62,15 +62,15 @@ TextCNN模型我是基于一个keras的实现，参考着【[模型类方式编�
 
 对于使用tensorflow的用户来说，学transformer真的是非常方便，[官网教程](https://tensorflow.google.cn/tutorials/text/transformer)上直接有2.0的教程。
 
-我的notebook里也有Transormer的学习，从官网改过来的比官网教程稍微详细点，但没有用到官网的数据集。
+我的notebook里也有[Transormer学习.ipynb](notebook\Transformer\Transformer学习.ipynb)，从官网改过来的比官网教程稍微详细点，但没有用到官网的数据集。
 
-![](\notebook\images\transformer.png)
+![](notebook\images\transformer.png)
 
 文本分类任务里，**没有**用到Decoder的部分，而是Encoder最后的输出接一个激活函数为sigmoid的全连接层输出概率。如图：
 
-<img src="notebook/images/transformer-classification.png" style="zoom:48%;" />
+<img src="notebook/images/transformer-classification.png" style="zoom:38%;" />
 
-Transformer的训练过程如下：
+Transformer的训练过程如下，详细代码[Transformer运用.ipynb](notebook\Transformer\Transformer运用.ipynb)：
 
 ![](notebook/images/transformer-res.png)
 
@@ -80,7 +80,7 @@ Transformer的性能就明显优于TextCNN了，只需要迭代不到十轮效�
 
 # BERT
 
-在`notebook/bert源码探索.ipynb`里我详细探讨了bert关键的`run_classifier.py`文件，主要是怎么修改数据处理的接口，使得我们的任务能用得上bert，以及评估指标，损失函数的修改。但我说实话这真是太麻烦了，而且只能使用tensorflow1的静态图版本。
+在[notebook/BERT/bert源码探索.ipynb](notebook/BERT/bert源码探索.ipynb)里我详细探讨了bert关键的`run_classifier.py`文件，主要是怎么修改数据处理的接口，使得我们的任务能用得上bert，以及评估指标，损失函数的修改。但我说实话这真是太麻烦了，而且只能使用tensorflow1的静态图版本。
 
 所以建议可以使用百度PaddlePaddle的PaddleHub，上面集成了很多预训练模型，加载模型只用2两行代码。开始预训练任务（除了数据预处理）总共不超过20行代码。
 
@@ -96,9 +96,15 @@ Transformer的性能就明显优于TextCNN了，只需要迭代不到十轮效�
 
 ![](notebook/images/paddlehub-多分类.png)
 
-类似Tensorflow的bert，你也需要写一个数据预处理的类来产生`dataset`。具体请看`notebook`
+类似Tensorflow的bert，你也需要写一个数据预处理的类来产生`dataset`。具体请看[notebook\BERT\paddlehub实现bert.ipynb](notebook\BERT\paddlehub实现bert.ipynb)
 
 bert这里我还没研究怎么画出训练过程的图，paddlehub教程说是可以用tensorboard，但是我本机性能不高，主要是在ai studio上跑的项目，所以没能可视化bert的训练过程。
 
 # 模型评估
+
+| 模型                                 | micro f1 | macro f1 | precision | recall |
+| ------------------------------------ | -------- | -------- | --------- | ------ |
+| TextCNN                              | 0.7834   | 0.5831   | 0.8640    | 0.7166 |
+| Transformer                          | 0.8858   | 0.8200   | 0.8860    | 0.8857 |
+| bert_wwm_ext_chinese_L-12_H-768_A-12 | 0.9102   | 0.9066   | 0.9257    | 0.8953 |
 
