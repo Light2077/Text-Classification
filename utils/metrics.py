@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-# _*_ coding: utf-8 _*_
-# @Time    : 2020/2/8 7:40 下午 
-# @Author  : Roger 
-# @Version : V 0.1
-# @Email   : 550997728@qq.com
-# @File    : metrics.py
 import tensorflow.keras.backend as K
 
 from sklearn.utils.multiclass import unique_labels
@@ -14,46 +7,58 @@ from sklearn.metrics import confusion_matrix, accuracy_score, classification_rep
 import tensorflow as tf
 import numpy as np
 
+def accuracy(y_true, y_pred):
+    return tf.reduce_mean(tf.cast(tf.equal(y_true, y_pred), tf.float32))
 
-def f1_np(y_true, y_pred):
-    """F1 metric.
-    Computes the micro_f1 and macro_f1, metrics for multi-label classification of
-    how many relevant items are selected.
+
+def precision_recall(y_true, y_pred):
+
+    y_pred = tf.round(tf.keras.backend.clip(y_pred, 0, 1))  # 如果是概率形式的预测标签
+    true_positives = tf.reduce_sum(y_true*y_pred)  # 统计所有标签的tp
+    predict_positives = tf.reduce_sum(y_pred)  # 统计所有标签的预测是pos的个数
+    real_positives = tf.reduce_sum(y_true)  # 统计所有标签实际是pos的个数
+    
+    # 加一个很小的数防止除0
+    precision = true_positives / (predict_positives + 1e-7)  # 预测的对了
+    recall = true_positives / (real_positives + 1e-7)
+    return precision, recall
+
+
+def micro_f1(y_true, y_pred):
     """
-    true_positives = np.sum(np.round(np.clip(y_true * y_pred, 0, 1)), axis=0)
-    predicted_positives = np.sum(np.round(np.clip(y_pred, 0, 1)), axis=0)
-    possible_positives = np.sum(np.round(np.clip(y_true, 0, 1)), axis=0)
-
-    """Macro_F1 metric.
+    y_true : tf.Tensor
+    y_pred : tf.Tensor
     """
-    precision = true_positives / (predicted_positives + 1e-8)
-    recall = true_positives / (possible_positives + 1e-8)
-    macro_f1 = np.mean(2 * precision * recall / (precision + recall + 1e-8))
+    y_pred = tf.round(tf.keras.backend.clip(y_pred, 0, 1))  # 如果是概率形式的预测标签
+    true_positives = tf.reduce_sum(y_true*y_pred, axis=0)  # 统计所有标签的tp
+    predict_positives = tf.reduce_sum(y_pred, axis=0)  # 统计所有标签的预测是pos的个数
+    real_positives = tf.reduce_sum(y_true, axis=0)  # 统计所有标签实际是pos的个数
+    
+    # 加一个很小的数防止除0
+    # micro precision and recall
+    precision = tf.reduce_sum(true_positives) / (tf.reduce_sum(predict_positives)  + 1e-7)
+    recall = tf.reduce_sum(true_positives) / (tf.reduce_sum(real_positives)  + 1e-7)
+    micro_f1 = 2 * precision * recall / (precision + recall)
 
-    """Micro_F1 metric.
+    return micro_f1
+
+
+def macro_f1(y_true, y_pred):
     """
-    precision = np.sum(true_positives) / np.sum(predicted_positives)
-    recall = np.sum(true_positives) / np.sum(possible_positives)
-    micro_f1 = 2 * precision * recall / (precision + recall + 1e-8)
-
-    return micro_f1, macro_f1
-
-
-def softmax_cross_entropy(preds, labels):
+    y_true : tf.Tensor
+    y_pred : tf.Tensor
     """
-    Softmax cross-entropy loss with masking.
-    """
-    loss = tf.nn.softmax_cross_entropy_with_logits(logits=preds, labels=labels)
-    return tf.reduce_mean(loss)
+    y_pred = tf.round(tf.keras.backend.clip(y_pred, 0, 1))  # 如果是概率形式的预测标签
+    true_positives = tf.reduce_sum(y_true*y_pred, axis=0)  # 统计每个标签的tp
+    predict_positives = tf.reduce_sum(y_pred, axis=0)  # 统计每个标签的预测是pos的个数
+    real_positives = tf.reduce_sum(y_true, axis=0)  # 统计每个标签实际是pos的个数
+    
+    precision = true_positives / (predict_positives + 1e-7)  # 预测的对了
+    recall = true_positives / (real_positives + 1e-7)  # 被逮到了的
 
+    macro_f1 = tf.reduce_mean(2 * precision * recall / (precision + recall + 1e-7))
 
-def accuracy(preds, labels):
-    """
-    Accuracy with masking.
-    """
-    correct_prediction = tf.equal(tf.argmax(preds, 1), tf.argmax(labels, 1))
-    accuracy_all = tf.cast(correct_prediction, tf.float32)
-    return tf.reduce_mean(accuracy_all)
+    return macro_f1
 
 
 def plot_confusion_matrix(y_true, y_pred, classes,
@@ -110,43 +115,57 @@ def plot_confusion_matrix(y_true, y_pred, classes,
     return ax
 
 
-def micro_f1(y_true, y_pred):
+def evaluation(y_true, y_pred, metrics):
     """
-    F1 metric.
+    多标签分类的评估
+    metrics : ['accuracy', 'micro_precision', 'macro_precision', 
+                'micro_recall', 'macro_recall', 'micro_f1', 'macro_f1']
+    """
 
-    Computes the micro_f1 and macro_f1,
-    metrics for multi-label classification of
-    how many relevant items are selected.
-    """
-    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)), axis=0)
-    predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)), axis=0)
-    possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)), axis=0)
+    y_pred = tf.round(tf.keras.backend.clip(y_pred, 0, 1))
 
-    """
-    Micro_F1 metric.
-    """
-    precision = K.sum(true_positives) / (K.sum(predicted_positives) + K.epsilon())
-    recall = K.sum(true_positives) / (K.sum(possible_positives) + K.epsilon())
-    micro_f1 = 2 * precision * recall / (precision + recall + K.epsilon())
-    return micro_f1
+    true_positives = tf.reduce_sum(y_true*y_pred, axis=0)  # 统计每个标签的tp
+    predict_positives = tf.reduce_sum(y_pred, axis=0)  # 统计每个标签的预测是pos的个数
+    real_positives = tf.reduce_sum(y_true, axis=0)  # 统计每个标签实际是pos的个数
+
+    accuracy = tf.reduce_mean(tf.cast(tf.equal(y_true, y_pred), tf.float32))  # 准确率无所谓 macro micro
+
+    # micro precision and recall
+    micro_precision = tf.reduce_sum(true_positives) / (tf.reduce_sum(predict_positives)  + 1e-9)
+    micro_recall = tf.reduce_sum(true_positives) / (tf.reduce_sum(real_positives)  + 1e-9)
+    micro_f1 = 2 * micro_precision * micro_recall / (micro_precision + micro_recall)
+
+    # macro precision and recall
+    macro_precision = tf.reduce_mean(true_positives / (predict_positives + 1e-9))
+    macro_recall = tf.reduce_mean(true_positives / (real_positives + 1e-9))
+
+    # 不能直接拿平均的p和r来求macro f1
+    _precision = true_positives / (predict_positives + 1e-9)
+    _recall = true_positives / (real_positives + 1e-9)
+    macro_f1 = tf.reduce_mean(2 * _precision * _recall / (_precision + _recall))
+
+    res = dict()
+    for metric in metrics:
+        if metric == 'accuracy':
+            res[metric] = accuracy.numpy()
+
+        if metric == 'micro_precision':
+            res[metric] = micro_precision.numpy()
+
+        if metric == 'macro_precision':
+            res[metric] = macro_precision.numpy()
+
+        if metric == 'micro_recall':
+            res[metric] = micro_recall.numpy()
+
+        if metric == 'macro_recall':
+            res[metric] = macro_recall.numpy()
+
+        if metric == 'micro_f1':
+            res[metric] = micro_f1.numpy()
+
+        if metric == 'macro_f1':
+            res[metric] = macro_f1.numpy()
 
 
-def macro_f1(y_true, y_pred):
-    """
-    F1 metric.
-
-    Computes the micro_f1 and macro_f1,
-    metrics for multi-label classification of
-    how many relevant items are selected.
-    """
-    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)), axis=0)
-    predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)), axis=0)
-    possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)), axis=0)
-
-    """
-    Macro_F1 metric.
-    """
-    precision = true_positives / (predicted_positives + K.epsilon())
-    recall = true_positives / (possible_positives + K.epsilon())
-    macro_f1 = K.mean(2 * precision * recall / (precision + recall + K.epsilon()))
-    return macro_f1
+    return res

@@ -1,11 +1,13 @@
-import tensorflow as tf
+
 import os
 import sys
 import time
+import argparse
+import tensorflow as tf
 sys.path.append(os.getcwd())
 
 from utils.preprocess import load_testcnn_data
-from utils.metrics import micro_f1, macro_f1
+from utils.metrics import micro_f1, macro_f1, precision_recall
 from transformer.model import TransformerClassifier
 
 # Masking
@@ -71,14 +73,17 @@ def predict(model, x, batch_size=1024):
     return res
 
 
+
+
 def evaluation(model, x, y):
     y = tf.cast(y, dtype=tf.float32)
     y_pred = predict(model, x)
     
     predict_accuracy = tf.keras.metrics.BinaryAccuracy(name='predict_accuracy')
     acc = predict_accuracy(y, y_pred)
-    mi_f1=micro_f1(y, y_pred)
-    ma_f1=macro_f1(y, y_pred)
+    mi_f1 = micro_f1(y, y_pred)
+    ma_f1 = macro_f1(y, y_pred)
+    precision, recall = precision_recall(y, y_pred)
     
     print("val accuracy {:.4f}, micro f1 {:.4f} macro f1 {:.4f}".format(
                     acc.numpy(), mi_f1.numpy(), ma_f1.numpy()))

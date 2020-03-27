@@ -198,7 +198,7 @@ def main():
 
     # 对于testcnn和transformer的预处理
     df = df_preprocess(df)  # 切词，分词，去停用词
-    create_testcnn_data(df, num_words=30000, maxlen=128)
+    create_testcnn_data(df, num_words=50000, maxlen=128)
 
 
 if __name__ == '__main__':
