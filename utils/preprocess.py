@@ -25,6 +25,7 @@ TEST_TSV = os.path.join(ROOT, 'data', 'test.tsv')
 
 # TextCNN and Transformer
 TOKENIZER_BINARIZER = os.path.join(ROOT, 'data', 'tokenizer_binarizer.pickle')
+LABELS_FILE = os.path.join(ROOT, 'data', 'label.txt')
 X_NPY = os.path.join(ROOT, 'data', 'x.npy')  # testcnn 和 transformer的数据文件
 Y_NPY = os.path.join(ROOT, 'data', 'y.npy')
 
@@ -139,6 +140,10 @@ def create_testcnn_data(df, num_words=50000, maxlen=128):
     # 对于label处理
     mlb = MultiLabelBinarizer()
     y = mlb.fit_transform(df.label.apply(lambda label: label.split()))
+
+    with open(LABELS_FILE, mode='w', encoding='utf-8') as f:
+        for label in mlb.classes_:
+            f.write(label+'\n')
 
     # 对content处理
     tokenizer = Tokenizer(num_words=num_words, oov_token="<UNK>")
