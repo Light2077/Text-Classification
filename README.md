@@ -1,8 +1,8 @@
 # Text-Classification
 
-这个项目的任务是**试题知识点标注**。
+这个项目的任务是**试题知识点标注**。属于多标签文本分类任务。
 
-我使用了3个深度学习模型做这个项目，分别是TextCNN， Transformer, Bert。这个项目属于学习型项目，主要是通过代码实践的方式，加深对理论的理解。模型的性能测试拉到最下面，下面具体介绍项目：
+我使用了3个深度学习模型做这个项目，分别是TextCNN， Transformer, Bert。这个项目属于学习型项目，主要是通过代码实践的方式，加深对理论的理解。模型的性能测试在最下面，下面具体介绍一下项目：
 
 ![](notebook/images/原始数据概况.jpg)
 
@@ -10,7 +10,7 @@
 
 ![](notebook/images/古代史第一题.png)
 
-**结尾部分**会有知识点，所以在数据预处理的时候还需要为每道题目提取出知识点。项目的大致流程如下：
+可以看到，题目的**结尾部分**会列出这道题的知识点，而且不同的题目可能会有相同的知识点，所以在数据预处理的时候还需要为每道题目提取出知识点。项目的大致流程如下：
 
 
 
@@ -31,9 +31,9 @@
 │─utils  # 数据预处理及辅助函数
 ```
 
-首先开局一个[压缩包](data/百度题库.zip)
+首先开局一个[压缩包:百度题库.zip](data/百度题库.zip)
 
-先进行数据预处理，代码在[preprocess.py](utils/preprocess.py)。数据预处理的代码详解可以看[数据预处理.ipynb](notebook/数据预处理/数据预处理.ipynb)。里边有非常详细的步骤。
+我们需要对这个压缩包先进行数据预处理，代码在[preprocess.py](utils/preprocess.py)。数据预处理的代码详解可以看[数据预处理.ipynb](notebook/数据预处理/数据预处理.ipynb)。里边有非常详细的步骤。
 
 经过数据预处理后得到了这三个模型能用的数据。对于**bert**是整理出：
 
@@ -97,7 +97,7 @@ Transformer的性能就明显优于TextCNN了，只需要迭代不到十轮效�
 
 在[bert源码探索](notebook/BERT/bert源码探索.ipynb)里我详细探讨了如何修改bert关键的`run_classifier.py`文件，主要是怎么修改数据处理的接口，使得我们的任务能用得上bert，以及评估指标，损失函数的修改。但我说实话这真是太麻烦了，而且只能使用tensorflow1的静态图版本。
 
-所以建议使用百度PaddlePaddle的PaddleHub，上面集成了很多预训练模型，加载模型只用2两行代码。开始预训练任务（除了数据预处理）总共不超过20行代码。或者也可以使用[bert-as-service](https://github.com/hanxiao/bert-as-service)，对于这个项目，可以参见[bert-as-service简单使用](notebook/BERT/bert-as-service简单使用 .ipynb)。
+所以建议使用百度PaddlePaddle的PaddleHub，上面集成了很多预训练模型，加载模型只用2两行代码。开始预训练任务（除了数据预处理）总共不超过20行代码。或者也可以使用[bert-as-service](https://github.com/hanxiao/bert-as-service)，对于这个项目，可以参见[bert as service简单使用](notebook/BERT/bert-as-service简单使用.ipynb)。
 
 - [PaddleHub官网](https://www.paddlepaddle.org.cn/hub)
 
@@ -173,7 +173,7 @@ textcnn和transformer需要tensorflow2.0及以上版本。
 - [Transformer运用](notebook/Transformer/Transformer运用.ipynb)
 - [bert源码探索](notebook/BERT/bert源码探索.ipynb)
 - [paddlehub实现bert](notebook/BERT/paddlehub实现bert.ipynb)
-- [bert as service简单使用](notebook/BERT/bert-as-service简单使用 .ipynb)
+- [bert as service简单使用](notebook/BERT/bert-as-service简单使用.ipynb)
 
 
 
