@@ -12,14 +12,18 @@
 
 **结尾部分**会有知识点，所以在数据预处理的时候还需要为每道题目提取出知识点。项目的大致流程如下：
 
+
+
 ![](notebook/images/项目流程图.png)
+
+
 
 项目框架
 
 ```
 │─data
-│	│─百度题库.zip  # 数据源
-│	│─stopwords.txt
+│   │─百度题库.zip  # 数据源
+│   │─stopwords.txt
 │─notebook  # 存放项目代码详解的jupyter notebook文件夹
 │─textcnn  # 模型的搭建和训练代码，下同
 │─bert
@@ -164,10 +168,12 @@ textcnn和transformer需要tensorflow2.0及以上版本。
 最后是notebook总结：
 
 - [TextCNN学习](notebook/TextCNN/TextCNN学习.ipynb)
-- [TextCNN应用](notebook/TextCNN/TextCNN学习.ipynb)
+- [TextCNN运用](notebook/TextCNN/TextCNN运用.ipynb)
 - [Transformer学习](notebook/Transformer/Transformer学习.ipynb)
-- [Transformer应用](notebook/Transformer/Transformer应用.ipynb)
+- [Transformer运用](notebook/Transformer/Transformer运用.ipynb)
 - [bert源码探索](notebook/BERT/bert源码探索.ipynb)
 - [paddlehub实现bert](notebook/BERT/paddlehub实现bert.ipynb)
-- [bert-as-service简单使用](notebook/BERT/bert-as-service简单使用 .ipynb)
+- [bert as service简单使用](notebook/BERT/bert-as-service简单使用 .ipynb)
+
+
 
